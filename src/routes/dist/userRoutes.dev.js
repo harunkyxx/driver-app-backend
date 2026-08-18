@@ -1,16 +1,16 @@
-const express = require("express");
+"use strict";
 
-const {
-  getUsers,
-  createUser,
-  getUserById,
-  getCurrentUser,
-} = require("../controllers/userController");
+var express = require("express");
 
-const authMiddleware = require("../middleware/authMiddleware");
+var _require = require("../controllers/userController"),
+    getUsers = _require.getUsers,
+    createUser = _require.createUser,
+    getUserById = _require.getUserById,
+    getCurrentUser = _require.getCurrentUser;
 
-const router = express.Router();
+var authMiddleware = require("../middleware/authMiddleware");
 
+var router = express.Router();
 /**
  * @swagger
  * /api/users:
@@ -28,8 +28,8 @@ const router = express.Router();
  *               items:
  *                 type: object
  */
-router.get("/", getUsers);
 
+router.get("/", getUsers);
 /**
  * @swagger
  * /api/users/me:
@@ -47,8 +47,8 @@ router.get("/", getUsers);
  *       404:
  *         description: User not found
  */
-router.get("/me", authMiddleware, getCurrentUser);
 
+router.get("/me", authMiddleware, getCurrentUser);
 /**
  * @swagger
  * /api/users:
@@ -101,8 +101,8 @@ router.get("/me", authMiddleware, getCurrentUser);
  *       401:
  *         description: Unauthorized
  */
-router.post("/", authMiddleware, createUser);
 
+router.post("/", authMiddleware, createUser);
 /**
  * @swagger
  * /api/users/{id}:
@@ -123,6 +123,6 @@ router.post("/", authMiddleware, createUser);
  *       404:
  *         description: User not found
  */
-router.get("/:id", getUserById);
 
+router.get("/:id", getUserById);
 module.exports = router;

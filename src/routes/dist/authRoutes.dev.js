@@ -1,12 +1,12 @@
-const express = require("express");
+"use strict";
 
-const {
-  register,
-  login,
-} = require("../controllers/authController");
+var express = require("express");
 
-const router = express.Router();
+var _require = require("../controllers/authController"),
+    register = _require.register,
+    login = _require.login;
 
+var router = express.Router();
 /**
  * @swagger
  * /api/auth/register:
@@ -53,8 +53,8 @@ const router = express.Router();
  *       409:
  *         description: User already exists
  */
-router.post("/register", register);
 
+router.post("/register", register);
 /**
  * @swagger
  * /api/auth/login:
@@ -83,6 +83,6 @@ router.post("/register", register);
  *       401:
  *         description: Invalid email or password
  */
-router.post("/login", login);
 
+router.post("/login", login);
 module.exports = router;

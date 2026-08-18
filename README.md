@@ -3,7 +3,15 @@
 Driver App Backend is a REST API built with Node.js, Express and MongoDB.
 
 The application allows customers to register, log in and create ride requests. Drivers can view pending rides, accept rides and complete them.
+## Swagger API Documentation
 
+After starting the server, open:
+
+http://127.0.0.1:5050/api-docs
+
+Swagger UI can be used to view and test the API endpoints.
+
+For protected endpoints, login first, copy the JWT token, and use the Authorize button in Swagger.
 ## Technologies
 
 - Node.js

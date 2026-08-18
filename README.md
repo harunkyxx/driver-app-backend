@@ -338,7 +338,7 @@ The terminal should display:
 
 ```text
 MongoDB connected
-Server running on http://localhost:5050
+Server running on http://127.0.0.1:5050
 ```
 
 Keep this terminal open while testing the application.

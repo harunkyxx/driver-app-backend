@@ -32,19 +32,19 @@ The application allows customers to register, log in and create ride requests. D
 - API testing with Supertest
 
 ## API Endpoints
-POST /api/auth/register
-POST /api/auth/login
+- POST /api/auth/register
+- POST /api/auth/login
 
-GET  /api/users
-POST /api/users
-GET  /api/users/me
-GET  /api/users/:id
+- GET  /api/users
+- POST /api/users
+- GET  /api/users/me
+- GET  /api/users/:id
 
-POST  /api/rides
-GET   /api/rides
-GET   /api/rides/my
-PATCH /api/rides/:id/accept
-PATCH /api/rides/:id/complete
+- POST  /api/rides
+- GET   /api/rides
+- GET   /api/rides/my
+- PATCH /api/rides/:id/accept
+- PATCH /api/rides/:id/complete
 
 ## Project Structure
 

@@ -26,6 +26,7 @@ var router = express.Router();
  *               - email
  *               - phone
  *               - password
+ *               - role
  *             properties:
  *               firstName:
  *                 type: string
@@ -44,6 +45,10 @@ var router = express.Router();
  *                 example: Password123
  *               role:
  *                 type: string
+ *                 enum:
+ *                   - CUSTOMER
+ *                   - DRIVER
+ *                   - ADMIN
  *                 example: CUSTOMER
  *     responses:
  *       201:

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Driver App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Driver App</h1>
+    <p class="subtitle">Simple frontend for the Driver App API</p>
+
+    <section class="card">
+      <h2>Register</h2>
+      <input id="firstName" placeholder="First name" />
+      <input id="lastName" placeholder="Last name" />
+      <input id="registerEmail" type="email" placeholder="Email" />
+      <input id="phone" placeholder="Phone" />
+      <input id="registerPassword" type="password" placeholder="Password" />
+
+      <select id="role">
+        <option value="CUSTOMER">Customer</option>
+        <option value="DRIVER">Driver</option>
+      </select>
+
+      <button onclick="registerUser()">Register</button>
+      <p id="registerMessage" class="message"></p>
+    </section>
+
+    <section class="card">
+      <h2>Login</h2>
+      <input id="loginEmail" type="email" placeholder="Email" />
+      <input id="loginPassword" type="password" placeholder="Password" />
+      <button onclick="loginUser()">Login</button>
+      <p id="loginMessage" class="message"></p>
+    </section>
+
+    <section id="customerSection" class="card hidden">
+      <h2>Customer</h2>
+
+      <h3>Create Ride</h3>
+      <input id="pickupLocation" placeholder="Pickup location" />
+      <input id="destination" placeholder="Destination" />
+      <button onclick="createRide()">Create Ride</button>
+
+      <h3>My Rides</h3>
+      <button onclick="getMyRides()">Refresh My Rides</button>
+      <div id="myRides"></div>
+    </section>
+
+    <section id="driverSection" class="card hidden">
+      <h2>Driver</h2>
+
+      <h3>Pending Rides</h3>
+      <button onclick="getPendingRides()">Refresh Pending Rides</button>
+      <div id="pendingRides"></div>
+
+      <h3>My Accepted Rides</h3>
+      <button onclick="getDriverRides()">Refresh My Rides</button>
+      <div id="driverRides"></div>
+    </section>
+
+    <section id="accountSection" class="card hidden">
+      <h2>Account</h2>
+      <p id="currentUser"></p>
+      <button class="secondary" onclick="logout()">Logout</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

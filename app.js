@@ -13,20 +13,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Frontend
+app.use(express.static("public"));
+
+// Swagger
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec)
 );
 
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/rides", rideRoutes);
-
-app.get("/", (req, res) => {
-  res.json({
-    message: "Driver App API is running",
-  });
-});
 
 module.exports = app;

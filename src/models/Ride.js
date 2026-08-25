@@ -31,10 +31,14 @@ const rideSchema = new mongoose.Schema(
       enum: ["PENDING", "ACCEPTED", "COMPLETED", "CANCELLED"],
       default: "PENDING",
     },
+distanceKm: {
+  type: Number,
+  required: true,
+},
 
-    fare: {
-      type: Number,
-      default: 0,
+   fare: {
+  type: Number,
+  default: 0,
     },
   },
   {

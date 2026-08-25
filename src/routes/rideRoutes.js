@@ -1,13 +1,15 @@
 const express = require("express");
-
 const {
   createRide,
   getPendingRides,
   acceptRide,
   getMyRides,
   completeRide,
+  updateRide,
+  deleteRide,
+  getDriverRides,
+  cancelRide,
 } = require("../controllers/rideController");
-
 const authMiddleware = require("../middleware/authMiddleware");
 const roleMiddleware = require("../middleware/roleMiddleware");
 
@@ -32,6 +34,7 @@ const router = express.Router();
  *             required:
  *               - pickupLocation
  *               - destination
+ *               - distanceKm
  *             properties:
  *               pickupLocation:
  *                 type: string
@@ -39,6 +42,10 @@ const router = express.Router();
  *               destination:
  *                 type: string
  *                 example: Melbourne CBD
+ *               distanceKm:
+ *                 type: number
+ *                 example: 10
+ * 
  *     responses:
  *       201:
  *         description: Ride created successfully
@@ -141,7 +148,65 @@ router.patch(
   roleMiddleware("DRIVER"),
   acceptRide
 );
-
+/**
+ * @swagger
+ * /api/rides/{id}/cancel:
+ *   patch:
+ *     summary: Cancel a ride
+ *     description: A customer can cancel their own pending ride. A driver can cancel a ride assigned to them if it is accepted.
+ *     tags:
+ *       - Rides
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ride ID
+ *     responses:
+ *       200:
+ *         description: Ride cancelled successfully
+ *       400:
+ *         description: Ride cannot be cancelled in its current status
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: User is not allowed to cancel this ride
+ *       404:
+ *         description: Ride not found
+ */
+router.patch(
+  "/:id/cancel",
+  authMiddleware,
+  roleMiddleware("CUSTOMER", "DRIVER"),
+  cancelRide
+);
+/**
+ * @swagger
+ * /api/rides/driver/my:
+ *   get:
+ *     summary: Get rides accepted by the current driver
+ *     description: Returns only the rides assigned to the logged-in driver.
+ *     tags:
+ *       - Rides
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Driver rides returned successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Driver role required
+ */
+router.get(
+  "/driver/my",
+  authMiddleware,
+  roleMiddleware("DRIVER"),
+  getDriverRides
+);
 /**
  * @swagger
  * /api/rides/{id}/complete:
@@ -177,5 +242,90 @@ router.patch(
   roleMiddleware("DRIVER"),
   completeRide
 );
+/**
+ * @swagger
+ * /api/rides/{id}:
+ *   patch:
+ *     summary: Update a ride
+ *     description: Allows the customer who created the ride to update pickup location or destination while the ride is still pending.
+ *     tags:
+ *       - Rides
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ride ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pickupLocation:
+ *                 type: string
+ *                 example: Sunshine
+ *               destination:
+ *                 type: string
+ *                 example: Melbourne CBD
+ *     responses:
+ *       200:
+ *         description: Ride updated successfully
+ *       400:
+ *         description: Invalid request or ride is not pending
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: User cannot update this ride
+ *       404:
+ *         description: Ride not found
+ */
+router.patch(
+  "/:id",
+  authMiddleware,
+  roleMiddleware("CUSTOMER"),
+  updateRide
+);
+
+/**
+ * @swagger
+ * /api/rides/{id}:
+ *   delete:
+ *     summary: Delete a ride
+ *     description: Allows the customer who created the ride to delete it while the ride is still pending.
+ *     tags:
+ *       - Rides
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Ride ID
+ *     responses:
+ *       200:
+ *         description: Ride deleted successfully
+ *       400:
+ *         description: Only pending rides can be deleted
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: User cannot delete this ride
+ *       404:
+ *         description: Ride not found
+ */
+router.delete(
+  "/:id",
+  authMiddleware,
+  roleMiddleware("CUSTOMER"),
+  deleteRide
+);
+
 
 module.exports = router;

@@ -26,6 +26,7 @@ const router = express.Router();
  *               - email
  *               - phone
  *               - password
+ *               - role
  *             properties:
  *               firstName:
  *                 type: string
@@ -44,6 +45,10 @@ const router = express.Router();
  *                 example: Password123
  *               role:
  *                 type: string
+ *                 enum:
+ *                   - CUSTOMER
+ *                   - DRIVER
+ *                   - ADMIN
  *                 example: CUSTOMER
  *     responses:
  *       201:
@@ -54,7 +59,6 @@ const router = express.Router();
  *         description: User already exists
  */
 router.post("/register", register);
-
 /**
  * @swagger
  * /api/auth/login:

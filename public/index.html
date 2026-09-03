@@ -23,6 +23,43 @@
         <option value="CUSTOMER">Customer</option>
         <option value="DRIVER">Driver</option>
       </select>
+      <!-- Customer Vehicle Fields -->
+<div id="customerVehicleFields">
+
+  <label>Car Brand</label>
+  <select id="carBrand">
+    <option value="">Select Car Brand</option>
+  </select>
+
+  <label>Car Model</label>
+  <select id="carModel" disabled>
+    <option value="">Select Car Model</option>
+  </select>
+
+  <label>Vehicle Type</label>
+  <select id="vehicleType">
+    <option value="">Select Vehicle Type</option>
+    <option value="SEDAN">Sedan</option>
+    <option value="SUV">SUV</option>
+    <option value="HATCHBACK">Hatchback</option>
+    <option value="VAN">Van</option>
+    <option value="UTE">Ute</option>
+    <option value="OTHER">Other</option>
+  </select>
+
+</div>
+
+<!-- Driver Fields -->
+<div id="driverFields" style="display: none;">
+
+  <label>Driver Licence Number</label>
+  <input
+    type="text"
+    id="driverLicenceNumber"
+    placeholder="Driver Licence Number"
+  >
+
+</div>
 
       <button onclick="registerUser()">Register</button>
       <p id="registerMessage" class="message"></p>

@@ -38,6 +38,31 @@ const userSchema = new mongoose.Schema(
       enum: ["CUSTOMER", "DRIVER", "ADMIN"],
       default: "CUSTOMER",
     },
+    carBrand: {
+  type: String,
+  trim: true,
+},
+
+carModel: {
+  type: String,
+  trim: true,
+},
+
+vehicleType: {
+  type: String,
+  enum: [
+    "SEDAN",
+    "SUV",
+    "HATCHBACK",
+    "VAN",
+    "UTE",
+    "OTHER"
+  ],
+},
+driverLicenceNumber: {
+  type: String,
+  trim: true,
+},
   },
   {
     timestamps: true,

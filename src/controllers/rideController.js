@@ -1,5 +1,6 @@
 const Ride = require("../models/Ride");
 const { getDistanceKm } = require("../services/locationService");
+const { sendRideEvent } = require("../services/rabbitService");
 const createRide = async (req, res) => {
   try {
     const {
@@ -30,7 +31,14 @@ const createRide = async (req, res) => {
       distanceKm,
       fare: Number(fare.toFixed(2)),
     });
-
+sendRideEvent({
+  type: "RIDE_CREATED",
+  rideId: ride._id.toString(),
+  customerId: ride.customer.toString(),
+  pickupLocation: ride.pickupLocation,
+  destination: ride.destination,
+  fare: ride.fare,
+});
     res.status(201).json({
       message: "Ride created successfully",
       ride,
@@ -43,6 +51,7 @@ const createRide = async (req, res) => {
     });
   }
 };
+
 const getPendingRides = async (req, res) => {
   try {
     const rides = await Ride.find({
@@ -82,7 +91,13 @@ const acceptRide = async (req, res) => {
     ride.status = "ACCEPTED";
 
     await ride.save();
-
+sendRideEvent({
+  type: "RIDE_ACCEPTED",
+  rideId: ride._id.toString(),
+  customerId: ride.customer.toString(),
+  driverId: ride.driver.toString(),
+  status: ride.status,
+});
     res.status(200).json({
       message: "Ride accepted successfully",
       ride,
@@ -137,6 +152,13 @@ const completeRide = async (req, res) => {
     ride.status = "COMPLETED";
 
     await ride.save();
+    sendRideEvent({
+  type: "RIDE_COMPLETED",
+  rideId: ride._id.toString(),
+  customerId: ride.customer.toString(),
+  driverId: ride.driver.toString(),
+  status: ride.status,
+});
 
     res.status(200).json({
       message: "Ride completed successfully",
@@ -301,6 +323,14 @@ const cancelRide = async (req, res) => {
     ride.status = "CANCELLED";
 
     await ride.save();
+    sendRideEvent({
+  type: "RIDE_CANCELLED",
+  rideId: ride._id.toString(),
+  customerId: ride.customer.toString(),
+  driverId: ride.driver ? ride.driver.toString() : null,
+  cancelledBy: req.user.role,
+  status: ride.status,
+});
 
     res.status(200).json({
       message: "Ride cancelled successfully",

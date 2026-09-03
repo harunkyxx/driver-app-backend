@@ -1,4 +1,7 @@
 require("dotenv").config();
+jest.mock("../src/services/locationService", () => ({
+  getDistanceKm: jest.fn().mockResolvedValue(15),
+}));
 
 const request = require("supertest");
 const mongoose = require("mongoose");
@@ -127,12 +130,14 @@ describe("Rides API", () => {
   });
 
   test("PATCH /api/rides/:id returns 200 when customer updates ride", async () => {
-    const ride = await Ride.create({
-      customer: customer._id,
-      pickupLocation: "Sunshine",
-      destination: "Melbourne CBD",
-      status: "PENDING",
-    });
+   const ride = await Ride.create({
+  customer: customer._id,
+  pickupLocation: "Sunshine",
+  destination: "Melbourne CBD",
+  distanceKm: 15,
+  fare: 35,
+  status: "PENDING",
+});
 
     const response = await request(app)
       .patch(`/api/rides/${ride._id}`)
@@ -145,12 +150,14 @@ describe("Rides API", () => {
   });
 
   test("PATCH /api/rides/:id returns 403 when another customer updates ride", async () => {
-    const ride = await Ride.create({
-      customer: customer._id,
-      pickupLocation: "Sunshine",
-      destination: "Melbourne CBD",
-      status: "PENDING",
-    });
+  const ride = await Ride.create({
+  customer: customer._id,
+  pickupLocation: "Sunshine",
+  destination: "Melbourne CBD",
+  distanceKm: 15,
+  fare: 35,
+  status: "PENDING",
+});
 
     const response = await request(app)
       .patch(`/api/rides/${ride._id}`)
@@ -176,12 +183,14 @@ describe("Rides API", () => {
   });
 
   test("DELETE /api/rides/:id returns 200 when customer deletes ride", async () => {
-    const ride = await Ride.create({
-      customer: customer._id,
-      pickupLocation: "Sunshine",
-      destination: "Melbourne CBD",
-      status: "PENDING",
-    });
+   const ride = await Ride.create({
+  customer: customer._id,
+  pickupLocation: "Sunshine",
+  destination: "Melbourne CBD",
+  distanceKm: 15,
+  fare: 35,
+  status: "PENDING",
+});
 
     const response = await request(app)
       .delete(`/api/rides/${ride._id}`)
@@ -191,12 +200,14 @@ describe("Rides API", () => {
   });
 
   test("DELETE /api/rides/:id returns 403 when another customer deletes ride", async () => {
-    const ride = await Ride.create({
-      customer: customer._id,
-      pickupLocation: "Sunshine",
-      destination: "Melbourne CBD",
-      status: "PENDING",
-    });
+   const ride = await Ride.create({
+  customer: customer._id,
+  pickupLocation: "Sunshine",
+  destination: "Melbourne CBD",
+  distanceKm: 15,
+  fare: 35,
+  status: "PENDING",
+});
 
     const response = await request(app)
       .delete(`/api/rides/${ride._id}`)

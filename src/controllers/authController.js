@@ -4,14 +4,18 @@ const jwt = require("jsonwebtoken");
 
 const register = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      email,
-      phone,
-      password,
-      role,
-    } = req.body;
+  const {
+  firstName,
+  lastName,
+  email,
+  phone,
+  password,
+  role,
+  carBrand,
+  carModel,
+  vehicleType,
+  driverLicenceNumber,
+} = req.body;
 
     // Check required fields
     if (!firstName || !lastName || !email || !phone || !password) {
@@ -19,7 +23,25 @@ const register = async (req, res) => {
         message: "All required fields must be provided",
       });
     }
+if (
+  role === "CUSTOMER" &&
+  (!carBrand || !carModel || !vehicleType)
+) {
+  return res.status(400).json({
+    message:
+      "Car brand, car model and vehicle type are required for customers",
+  });
+}
 
+if (
+  role === "DRIVER" &&
+  !driverLicenceNumber
+) {
+  return res.status(400).json({
+    message:
+      "Driver licence number is required for drivers",
+  });
+}
     // Check if user already exists
     const existingUser = await User.findOne({
       email: email.toLowerCase(),
@@ -35,14 +57,28 @@ const register = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = await User.create({
-      firstName,
-      lastName,
-      email: email.toLowerCase(),
-      phone,
-      passwordHash,
-      role: role || "CUSTOMER",
-    });
+const user = await User.create({
+  firstName,
+  lastName,
+  email: email.toLowerCase(),
+  phone,
+  passwordHash,
+  role: role || "CUSTOMER",
+
+  carBrand:
+    role === "CUSTOMER" ? carBrand : undefined,
+
+  carModel:
+    role === "CUSTOMER" ? carModel : undefined,
+
+  vehicleType:
+    role === "CUSTOMER" ? vehicleType : undefined,
+
+  driverLicenceNumber:
+    role === "DRIVER"
+      ? driverLicenceNumber
+      : undefined,
+});
 
     res.status(201).json({
       message: "User registered successfully",

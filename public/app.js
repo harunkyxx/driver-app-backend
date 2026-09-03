@@ -4,14 +4,32 @@ let token = localStorage.getItem("token") || "";
 let currentRole = localStorage.getItem("role") || "";
 
 async function registerUser() {
+  const role = document.getElementById("role").value;
+
   const body = {
     firstName: document.getElementById("firstName").value,
     lastName: document.getElementById("lastName").value,
     email: document.getElementById("registerEmail").value,
     phone: document.getElementById("phone").value,
     password: document.getElementById("registerPassword").value,
-    role: document.getElementById("role").value,
+    role,
   };
+
+  if (role === "CUSTOMER") {
+    body.carBrand =
+      document.getElementById("carBrand").value;
+
+    body.carModel =
+      document.getElementById("carModel").value;
+
+    body.vehicleType =
+      document.getElementById("vehicleType").value;
+  }
+
+  if (role === "DRIVER") {
+    body.driverLicenceNumber =
+      document.getElementById("driverLicenceNumber").value;
+  }
 
   try {
     const response = await fetch(`${API_URL}/api/auth/register`, {
@@ -367,6 +385,122 @@ function logout() {
 
   document.getElementById("loginMessage").textContent = "Logged out";
 }
+const registerRole =
+  document.getElementById("role");
+
+const customerVehicleFields =
+  document.getElementById("customerVehicleFields");
+
+const driverFields =
+  document.getElementById("driverFields");
+async function loadCarMakes() {
+  const carBrandSelect =
+    document.getElementById("carBrand");
+
+  try {
+    const response = await fetch(
+      `${API_URL}/api/vehicles/makes`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.log("Could not load car brands");
+      return;
+    }
+
+    carBrandSelect.innerHTML =
+      '<option value="">Select Car Brand</option>';
+
+    data.makes.forEach((make) => {
+      const option = document.createElement("option");
+
+      option.value = make.name;
+      option.textContent = make.name;
+
+      carBrandSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.log("Vehicle API error:", error);
+  }
+}
+async function loadCarModels(make) {
+  const carModelSelect =
+    document.getElementById("carModel");
+
+  // Marka seçilmediyse model kutusunu kapat
+  if (!make) {
+    carModelSelect.innerHTML =
+      '<option value="">Select Car Model</option>';
+
+    carModelSelect.disabled = true;
+    return;
+  }
+
+  try {
+    carModelSelect.disabled = true;
+
+    carModelSelect.innerHTML =
+      '<option value="">Loading models...</option>';
+
+    const response = await fetch(
+      `${API_URL}/api/vehicles/models/${encodeURIComponent(make)}`
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      carModelSelect.innerHTML =
+        '<option value="">Could not load models</option>';
+      return;
+    }
+
+    carModelSelect.innerHTML =
+      '<option value="">Select Car Model</option>';
+
+    data.models.forEach((car) => {
+      const option = document.createElement("option");
+
+      option.value = car.model;
+      option.textContent = car.model;
+
+      carModelSelect.appendChild(option);
+    });
+
+    carModelSelect.disabled = false;
+
+  } catch (error) {
+    console.log("Car model error:", error);
+
+    carModelSelect.innerHTML =
+      '<option value="">Could not load models</option>';
+  }
+}
+const carBrandSelect =
+  document.getElementById("carBrand");
+
+carBrandSelect.addEventListener("change", () => {
+  loadCarModels(carBrandSelect.value);
+});
+function updateRegisterFields() {
+  if (registerRole.value === "CUSTOMER") {
+    customerVehicleFields.style.display = "block";
+    driverFields.style.display = "none";
+  }
+
+  if (registerRole.value === "DRIVER") {
+    customerVehicleFields.style.display = "none";
+    driverFields.style.display = "block";
+  }
+}
+
+registerRole.addEventListener(
+  "change",
+  updateRegisterFields
+);
+loadCarMakes();
+// Sayfa ilk açıldığında da doğru alanları göster
+updateRegisterFields();
 
 if (token && currentRole) {
   showDashboard();

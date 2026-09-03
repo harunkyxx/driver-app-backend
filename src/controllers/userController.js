@@ -33,14 +33,18 @@ const createUser = async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    const user = await User.create({
-      firstName,
-      lastName,
-      email,
-      phone,
-      passwordHash,
-      role: role || "CUSTOMER",
-    });
+   const user = await User.create({
+  firstName,
+  lastName,
+  email: email.toLowerCase(),
+  phone,
+  passwordHash,
+  role: role || "CUSTOMER",
+
+  carBrand: role === "DRIVER" ? carBrand : undefined,
+  carModel: role === "DRIVER" ? carModel : undefined,
+  vehicleType: role === "DRIVER" ? vehicleType : undefined,
+});
 
     res.status(201).json({
       id: user._id,
